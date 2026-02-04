@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Diary You Hold - A Dark Psychological Thriller Series</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header id="main-header">
+        <div class="header-content">
+            <h1 class="site-title">The Diary You Hold</h1>
+            <nav class="header-nav">
+                <button id="home-btn" class="nav-btn active">Home</button>
+                <button id="auth-btn" class="nav-btn">Login</button>
+                <span id="user-display" class="user-info" style="display: none;"></span>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content">
+        <!-- Homepage -->
+        <section id="homepage" class="page active">
+            <div class="hero-section">
+                <div class="hero-text">
+                    <h2 class="series-title">The Diary You Hold</h2>
+                    <div class="series-subtitle">A Dark Psychological Thriller Series</div>
+                    <p class="series-synopsis">
+                        Some secrets are meant to stay buried. But when you find a diary that wasn't meant for your eyes,
+                        the truth becomes a weapon—and you become its target. Three books. Three revelations. 
+                        One terrifying question: How well do you really know the people closest to you?
+                    </p>
+                </div>
+            </div>
+
+            <div class="books-container">
+                <h3 class="section-title">The Series</h3>
+                <div class="books-grid" id="books-list">
+                    <!-- Books will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Book View Page -->
+        <section id="book-page" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showPage('homepage')">← Back to Series</button>
+                <h2 class="page-title" id="book-title"></h2>
+            </div>
+            <div class="chapters-list" id="chapters-list">
+                <!-- Chapters will be loaded dynamically -->
+            </div>
+        </section>
+
+        <!-- Chapter View Page -->
+        <section id="chapter-page" class="page">
+            <div class="page-header">
+                <button class="back-btn" id="back-to-book">← Back to Chapters</button>
+                <h2 class="chapter-title" id="chapter-title"></h2>
+                <div class="chapter-meta">
+                    <span class="view-count" id="view-count">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 3C4.5 3 1.73 5.61 1 9c.73 3.39 3.5 6 7 6s6.27-2.61 7-6c-.73-3.39-3.5-6-7-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm0-6.5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z" fill="currentColor"/>
+                        </svg>
+                        <span id="view-count-number">0</span> views
+                    </span>
+                </div>
+            </div>
+
+            <article class="chapter-content" id="chapter-content">
+                <!-- Chapter content will be loaded here -->
+            </article>
+
+            <div class="chapter-navigation">
+                <button class="nav-chapter-btn" id="prev-chapter-btn" disabled>← Previous Chapter</button>
+                <button class="nav-chapter-btn" id="next-chapter-btn" disabled>Next Chapter →</button>
+            </div>
+
+            <!-- Comments Section -->
+            <section class="comments-section">
+                <h3 class="comments-title">Reader Reflections</h3>
+                
+                <div class="comment-form" id="comment-form-container">
+                    <div class="login-prompt" id="login-prompt">
+                        <p>Sign in to share your thoughts on this chapter</p>
+                        <button class="primary-btn" onclick="showAuthModal()">Sign In</button>
+                    </div>
+                    <form id="comment-form" style="display: none;">
+                        <textarea 
+                            id="comment-input" 
+                            placeholder="What did you think of this chapter? Share your theories, reactions, or interpretations..."
+                            maxlength="1000"
+                        ></textarea>
+                        <div class="form-actions">
+                            <span class="char-count" id="char-count">0/1000</span>
+                            <button type="submit" class="primary-btn">Post Comment</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="comments-list" id="comments-list">
+                    <!-- Comments will be loaded here -->
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <!-- Authentication Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+            <h2 class="modal-title">Welcome Back</h2>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Sign In</button>
+                <button class="auth-tab" data-tab="register">Create Account</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form active">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="primary-btn full-width">Sign In</button>
+                <div class="auth-error" id="login-error"></div>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="auth-form">
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm">Confirm Password</label>
+                    <input type="password" id="register-confirm" required minlength="6">
+                </div>
+                <button type="submit" class="primary-btn full-width">Create Account</button>
+                <div class="auth-error" id="register-error"></div>
+            </form>
+
+            <div class="auth-divider">
+                <span>or continue with</span>
+            </div>
+
+            <div class="social-auth">
+                <button class="social-btn google-btn" id="google-login">
+                    <svg width="18" height="18" viewBox="0 0 18 18">
+                        <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                        <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+                        <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/>
+                        <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                    </svg>
+                    Google
+                </button>
+                <button class="social-btn github-btn" id="github-login" disabled>
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    GitHub <span class="coming-soon">Coming Soon</span>
+                </button>
+                <button class="social-btn microsoft-btn" id="microsoft-login" disabled>
+                    <svg width="18" height="18" viewBox="0 0 23 23" fill="currentColor">
+                        <path fill="#f35325" d="M0 0h11v11H0z"/>
+                        <path fill="#81bc06" d="M12 0h11v11H12z"/>
+                        <path fill="#05a6f0" d="M0 12h11v11H0z"/>
+                        <path fill="#ffba08" d="M12 12h11v11H12z"/>
+                    </svg>
+                    Microsoft <span class="coming-soon">Coming Soon</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <!-- Main Script -->
+    <script src="script.js"></script>
+</body>
+</html>
