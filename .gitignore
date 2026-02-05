@@ -1,0 +1,34 @@
+# Firebase
+.firebase/
+.firebaserc
+firebase-debug.log
+firestore-debug.log
+
+# Environment variables (if you add them later)
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node modules (if you add build tools later)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build outputs (if you add a build step)
+dist/
+build/
+
+# Temporary files
+*.tmp
+temp/
+
