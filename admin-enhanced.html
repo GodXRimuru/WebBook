@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - TENSURA WebBooks</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin-panel-styles.css">
+</head>
+<body>
+    <!-- Admin Header -->
+    <header id="admin-header">
+        <div class="admin-header-content">
+            <h1 class="admin-title">🛡️ TENSURA WebBooks - Admin Panel</h1>
+            <div class="admin-header-actions">
+                <button class="back-to-site-btn" onclick="window.location.href='index.html'">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Back to Site
+                </button>
+                <button class="logout-admin-btn" onclick="logoutAdmin()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Access Denied (shown if not admin) -->
+    <div id="access-denied" class="access-denied" style="display: none;">
+        <div class="access-denied-content">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+            </svg>
+            <h2>Access Denied</h2>
+            <p>You must be an administrator to access this panel.</p>
+            <button class="primary-btn" onclick="window.location.href='index.html'">Go to Main Site</button>
+        </div>
+    </div>
+
+    <!-- Main Admin Content -->
+    <main id="admin-main" style="display: none;">
+        <div class="admin-container">
+            
+            <!-- Stats Dashboard -->
+            <section class="stats-section">
+                <h2 class="section-title">📊 Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Users</h3>
+                        <p class="stat-value" id="total-users">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Comments</h3>
+                        <p class="stat-value" id="total-comments">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Views</h3>
+                        <p class="stat-value" id="total-views">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Admin Users</h3>
+                        <p class="stat-value" id="total-admins">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin Management -->
+            <section class="admin-management-section">
+                <h2 class="section-title">👥 Admin Management</h2>
+                
+                <div class="admin-actions">
+                    <button class="action-btn" onclick="showPromoteUserModal()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <line x1="20" y1="8" x2="20" y2="14"/>
+                            <line x1="23" y1="11" x2="17" y2="11"/>
+                        </svg>
+                        Promote User to Admin
+                    </button>
+                </div>
+
+                <div class="admins-list">
+                    <h3>Current Admins</h3>
+                    <div id="admins-list-container">
+                        <div class="loading">Loading admins...</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- User Management -->
+            <section class="user-management-section">
+                <h2 class="section-title">👤 All Users</h2>
+                
+                <div class="search-bar">
+                    <input type="text" id="user-search" placeholder="Search users by email or username...">
+                </div>
+
+                <div id="users-list-container">
+                    <div class="loading">Loading users...</div>
+                </div>
+            </section>
+
+            <!-- Comments Moderation -->
+            <section class="comments-section">
+                <h2 class="section-title">💬 Recent Comments</h2>
+                
+                <div class="filter-options">
+                    <button class="filter-btn active" onclick="filterComments('all')">All</button>
+                    <button class="filter-btn" onclick="filterComments('flagged')">Flagged</button>
+                    <button class="filter-btn" onclick="filterComments('today')">Today</button>
+                </div>
+
+                <div id="comments-list-container">
+                    <div class="loading">Loading comments...</div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Promote User Modal -->
+    <div id="promote-modal" class="modal">
+        <div class="modal-overlay" onclick="closePromoteModal()"></div>
+        <div class="modal-content">
+            <h2>Promote User to Admin</h2>
+            <p>Enter the email address of the user you want to promote:</p>
+            
+            <input type="email" id="promote-email" placeholder="user@example.com">
+            
+            <div id="promote-error" class="error-message"></div>
+            <div id="promote-success" class="success-message"></div>
+            
+            <div class="modal-actions">
+                <button class="secondary-btn" onclick="closePromoteModal()">Cancel</button>
+                <button class="primary-btn" onclick="promoteUserToAdmin()">Promote to Admin</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Admin Modal -->
+    <div id="remove-admin-modal" class="modal">
+        <div class="modal-overlay" onclick="closeRemoveAdminModal()"></div>
+        <div class="modal-content">
+            <h2>Remove Admin Rights</h2>
+            <p>Are you sure you want to remove admin rights from:</p>
+            <p id="remove-admin-email" style="font-weight: bold; color: #ef4444;"></p>
+            
+            <div class="modal-actions">
+                <button class="secondary-btn" onclick="closeRemoveAdminModal()">Cancel</button>
+                <button class="danger-btn" onclick="confirmRemoveAdmin()">Remove Admin</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    
+    <!-- Admin Panel Script -->
+    <script src="admin-panel-enhanced.js"></script>
+</body>
+</html>
