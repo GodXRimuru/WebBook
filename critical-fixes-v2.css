@@ -1,0 +1,715 @@
+/* ==========================================
+   AUTH MODAL - PROPER SLIDING TOGGLE DESIGN
+   Desktop: Horizontal sliding | Mobile: Vertical stacking
+   ========================================== */
+
+/* Modal Overlay */
+.auth-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+}
+
+.auth-modal.active {
+    display: flex;
+}
+
+.auth-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Auth Container */
+.auth-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    min-height: 500px;
+    background: #1a1a1a;
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(218, 165, 32, 0.2);
+    border: 1px solid rgba(218, 165, 32, 0.3);
+    overflow: hidden;
+    z-index: 10;
+    display: flex;
+}
+
+.auth-container h1 {
+    font-family: "Crimson Pro", serif;
+    font-size: 1.75rem;
+    color: #fff;
+    margin-bottom: 1.5rem;
+}
+
+.auth-container p {
+    font-size: 0.9375rem;
+    color: #ccc;
+    margin: 1rem 0;
+}
+
+/* Form Box - Desktop Horizontal Sliding */
+.form-box {
+    position: absolute;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: #1a1a1a;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    padding: 30px;
+    z-index: 1;
+    transition: transform 0.6s ease-in-out;
+    overflow-y: auto;
+}
+
+.form-box.active {
+    display: flex;
+}
+
+/* Login slides to the right when switching to register */
+.auth-container.active .form-box.login {
+    transform: translateX(100%);
+}
+
+/* Register starts off-screen left, slides in when active */
+.form-box.register {
+    display: none;
+    left: 0;
+    right: auto;
+    transform: translateX(-100%);
+}
+
+.auth-container.active .form-box.register {
+    display: flex;
+    transform: translateX(0);
+}
+
+/* Reset form */
+.form-box.reset {
+    display: none;
+    z-index: 10;
+    right: 0;
+}
+
+.form-box.reset.active {
+    display: flex;
+}
+
+.form-box form {
+    width: 100%;
+    max-width: 320px;
+}
+
+/* Input Styling */
+.input-box {
+    position: relative;
+    margin: 1.5rem 0;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 14px 50px 14px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(218, 165, 32, 0.3);
+    outline: none;
+    font-size: 1rem;
+    color: #fff;
+    font-weight: 500;
+    transition: border-color 0.2s;
+}
+
+.input-box input:focus {
+    border-color: #daa520;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.input-box input::placeholder {
+    color: #888;
+    font-weight: 400;
+}
+
+.input-box svg,
+.input-box i {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 18px;
+}
+
+/* Remember/Forgot */
+.remember-forgot,
+.forgot-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: -5px 0 20px 0;
+    font-size: 14px;
+}
+
+.forgot-link {
+    justify-content: flex-end;
+}
+
+.remember-forgot label {
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.remember-forgot input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.remember-forgot a,
+.forgot-link a {
+    color: #daa520;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.remember-forgot a:hover,
+.forgot-link a:hover {
+    color: #c8960f;
+    text-decoration: underline;
+}
+
+/* Buttons */
+.auth-btn,
+.form-box .btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #daa520 0%, #c8960f 100%);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.auth-btn:hover,
+.form-box .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(218, 165, 32, 0.4);
+}
+
+/* Social Icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.social-icons a,
+.social-icons button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: transparent;
+    text-decoration: none;
+}
+
+.social-icons a:hover,
+.social-icons button:hover {
+    border-color: #daa520;
+    background: rgba(218, 165, 32, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Toggle Box - Desktop Horizontal */
+.toggle-box {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: linear-gradient(135deg, rgba(218, 165, 32, 0.95) 0%, rgba(201, 169, 97, 0.95) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.6s ease-in-out;
+    z-index: 2;
+}
+
+.auth-container.active .toggle-box {
+    transform: translateX(100%);
+}
+
+.toggle-panel {
+    width: 100%;
+    height: 100%;
+    color: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    text-align: center;
+}
+
+.toggle-panel h1 {
+    font-family: "Crimson Pro", serif;
+    font-size: 1.75rem;
+    color: #0a0a0a;
+    margin-bottom: 1rem;
+}
+
+.toggle-panel p {
+    color: #0a0a0a;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+}
+
+.toggle-btn,
+.toggle-panel .btn {
+    min-width: 140px;
+    padding: 12px 24px;
+    background: transparent;
+    border: 2px solid #0a0a0a;
+    color: #0a0a0a;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: auto;
+    margin-top: 0;
+}
+
+.toggle-btn:hover,
+.toggle-panel .btn:hover {
+    background: rgba(10, 10, 10, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(10, 10, 10, 0.2);
+}
+
+/* Error Messages */
+.error-message {
+    color: #ff6b6b;
+    font-size: 0.875rem;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.success-message {
+    color: #51cf66;
+    font-size: 0.875rem;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.reset-info {
+    font-size: 0.875rem;
+    color: #ccc;
+    margin-bottom: 1.5rem;
+}
+
+.back-to-login {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.back-to-login a {
+    color: #daa520;
+    text-decoration: none;
+    font-size: 0.9375rem;
+}
+
+.back-to-login a:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================
+   MOBILE RESPONSIVE - VERTICAL LAYOUT
+   ========================================== */
+@media screen and (max-width: 768px) {
+    .auth-container {
+        flex-direction: column;
+        max-width: 100%;
+        min-height: auto;
+        max-height: 90vh;
+        border-radius: 16px;
+    }
+
+    /* Forms stack vertically on mobile */
+    .form-box {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: 400px;
+        padding: 24px 20px;
+        transform: none !important;
+        left: auto;
+        right: auto;
+    }
+
+    .form-box form {
+        max-width: 100%;
+    }
+
+    /* Toggle box moves to top on mobile */
+    .toggle-box {
+        position: relative;
+        width: 100%;
+        height: 180px;
+        transform: none !important;
+        order: -1; /* Puts toggle box at the top */
+        left: auto;
+    }
+
+    .toggle-panel {
+        padding: 20px;
+    }
+
+    .toggle-panel h1 {
+        font-size: 1.5rem;
+    }
+
+    .toggle-panel p {
+        font-size: 0.875rem;
+    }
+
+    /* Hide/show forms properly on mobile */
+    .auth-container.active .form-box.login {
+        display: none;
+    }
+
+    .auth-container.active .form-box.register {
+        display: flex;
+        transform: none;
+    }
+
+    .input-box {
+        margin: 1rem 0;
+    }
+
+    .input-box input {
+        padding: 12px 45px 12px 16px;
+        font-size: 0.9375rem;
+    }
+
+    .input-box svg,
+    .input-box i {
+        width: 18px;
+        height: 18px;
+        right: 14px;
+        font-size: 16px;
+    }
+
+    .auth-container h1 {
+        font-size: 1.5rem;
+    }
+
+    .remember-forgot {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .auth-container {
+        max-height: 95vh;
+        border-radius: 12px;
+    }
+
+    .form-box {
+        min-height: 350px;
+        padding: 20px 16px;
+    }
+
+    .toggle-box {
+        height: 160px;
+    }
+
+    .auth-container h1 {
+        font-size: 1.375rem;
+    }
+
+    .toggle-panel h1 {
+        font-size: 1.25rem;
+    }
+
+    .input-box input {
+        padding: 11px 40px 11px 14px;
+        font-size: 0.875rem;
+    }
+
+    .auth-btn,
+    .form-box .btn {
+        padding: 12px;
+        font-size: 0.9375rem;
+    }
+
+    .social-icons a,
+    .social-icons button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+/* ==========================================
+   FOOTER - HORIZONTAL LAYOUT
+   Links on left, Profile card on right
+   ========================================== */
+.site-footer {
+    background: #0a0a0a;
+    padding: 30px 20px 20px;
+    border-top: 1px solid rgba(218, 165, 32, 0.2);
+    margin-top: 60px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+    white-space: nowrap;
+}
+
+.footer-links a:hover {
+    color: #daa520;
+}
+
+.footer-copyright {
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Profile Card - Compact Version */
+.footer-profile-card {
+    position: relative;
+}
+
+.profile-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50px;
+    padding: 10px 15px 10px 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(218, 165, 32, 0.2);
+    transition: all 0.3s;
+}
+
+.profile-card:hover {
+    border-color: rgba(218, 165, 32, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #daa520;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.profile-name {
+    color: #fff;
+    font-size: 16px;
+    margin: 0;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.profile-title {
+    color: #daa520;
+    font-size: 12px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.profile-button {
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(218, 165, 32, 0.1);
+    transition: all 0.3s;
+    border: none;
+    color: #daa520;
+    flex-shrink: 0;
+}
+
+.profile-button:hover {
+    background: rgba(218, 165, 32, 0.2);
+}
+
+.profile-menu-icon {
+    display: block;
+}
+
+.profile-close-icon {
+    display: none;
+}
+
+.profile-button.show-icon .profile-menu-icon {
+    display: none;
+}
+
+.profile-button.show-icon .profile-close-icon {
+    display: block;
+}
+
+.profile-social {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    margin-bottom: 10px;
+    background: #1a1a1a;
+    border-radius: 15px;
+    padding: 10px;
+    gap: 10px;
+    border: 1px solid rgba(218, 165, 32, 0.3);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.profile-social.show-social {
+    display: flex;
+}
+
+.profile-link {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-link:hover {
+    background: rgba(218, 165, 32, 0.2);
+    border-color: #daa520;
+    transform: translateY(-3px);
+}
+
+/* Mobile Footer */
+@media screen and (max-width: 768px) {
+    .footer-main {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .footer-links {
+        justify-content: center;
+        gap: 15px;
+        order: 2;
+    }
+    
+    .footer-profile-card {
+        order: 1;
+    }
+    
+    .footer-links a {
+        font-size: 13px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .footer-links {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .profile-card {
+        padding: 8px 12px 8px 8px;
+        gap: 10px;
+    }
+    
+    .profile-img {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .profile-name {
+        font-size: 14px;
+    }
+    
+    .profile-title {
+        font-size: 11px;
+    }
+    
+    .profile-social {
+        right: 50%;
+        transform: translateX(50%);
+    }
+}
