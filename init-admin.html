@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initialize Admin - TENSURA WebBooks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .status.info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #1976d2;
+        }
+
+        .status.success {
+            background: #e8f5e9;
+            color: #388e3c;
+            border-left: 4px solid #388e3c;
+        }
+
+        .status.error {
+            background: #ffebee;
+            color: #d32f2f;
+            border-left: 4px solid #d32f2f;
+        }
+
+        .status.warning {
+            background: #fff3e0;
+            color: #f57c00;
+            border-left: 4px solid #f57c00;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .back-btn {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .back-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .log {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .log.show {
+            display: block;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 5px;
+        }
+
+        .log-entry.success {
+            color: #388e3c;
+        }
+
+        .log-entry.error {
+            color: #d32f2f;
+        }
+
+        .admin-list {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .admin-list h3 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .admin-email {
+            padding: 8px 12px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ Admin Initialization</h1>
+        <p class="subtitle">One-time setup for admin access</p>
+
+        <div id="status" class="status info">
+            Please login first, then click "Initialize Admin"
+        </div>
+
+        <div id="admin-list" class="admin-list" style="display: none;">
+            <h3>Admin Emails:</h3>
+            <div id="admin-emails"></div>
+        </div>
+
+        <button id="init-btn" onclick="initializeAdmin()">
+            🚀 Initialize Admin
+        </button>
+
+        <button id="check-btn" onclick="checkAdminStatus()" style="background: #2196F3;">
+            🔍 Check Admin Status
+        </button>
+
+        <button class="back-btn" onclick="window.location.href='index.html'">
+            ← Back to Site
+        </button>
+
+        <div id="log" class="log"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCOPC2hi_P4F_8SdkpLOncymuGkgBQ5rJY",
+            authDomain: "webbook-9d8ec.firebaseapp.com",
+            projectId: "webbook-9d8ec",
+            storageBucket: "webbook-9d8ec.firebasestorage.app",
+            messagingSenderId: "744179746502",
+            appId: "1:744179746502:web:730b71902076c43a5679c7",
+            measurementId: "G-SW8CDMNDGY"
+        };
+
+        // Admin Emails
+        const ADMIN_EMAILS = [
+            'gamersandip872@gmail.com',
+            // Add more admin emails here
+        ];
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+
+        // Check auth state
+        auth.onAuthStateChanged((user) => {
+            currentUser = user;
+            const statusDiv = document.getElementById('status');
+            const initBtn = document.getElementById('init-btn');
+            const adminListDiv = document.getElementById('admin-list');
+            const emailsDiv = document.getElementById('admin-emails');
+
+            if (user) {
+                // Check if logged in user is in ADMIN_EMAILS list
+                const isInAdminList = ADMIN_EMAILS.map(e => e.toLowerCase()).includes(user.email.toLowerCase());
+
+                if (isInAdminList) {
+                    statusDiv.className = 'status success';
+                    statusDiv.textContent = `✅ Logged in as: ${user.email} (Admin Email)`;
+                    initBtn.disabled = false;
+
+                    // Show admin emails
+                    adminListDiv.style.display = 'block';
+                    emailsDiv.innerHTML = ADMIN_EMAILS.map(email => 
+                        `<div class="admin-email">${email}${email.toLowerCase() === user.email.toLowerCase() ? ' (You)' : ''}</div>`
+                    ).join('');
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.innerHTML = `❌ Access Denied!<br>Your email (${user.email}) is NOT in the admin list.<br><br>Only these emails can initialize admin:<br>${ADMIN_EMAILS.join('<br>')}`;
+                    initBtn.disabled = true;
+                    adminListDiv.style.display = 'none';
+                    log(`✗ Access denied: ${user.email} is not in ADMIN_EMAILS list`, true);
+                }
+            } else {
+                statusDiv.className = 'status warning';
+                statusDiv.innerHTML = '⚠️ Not logged in. <a href="index.html">Click here to login</a>';
+                initBtn.disabled = true;
+                adminListDiv.style.display = 'none';
+            }
+        });
+
+        // Log function
+        function log(message, isError = false) {
+            const logDiv = document.getElementById('log');
+            logDiv.classList.add('show');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${isError ? 'error' : 'success'}`;
+            entry.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        // Initialize admin
+        async function initializeAdmin() {
+            if (!currentUser) {
+                alert('Please login first!');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // SECURITY CHECK: Verify user email is in ADMIN_EMAILS list
+            const isInAdminList = ADMIN_EMAILS.map(e => e.toLowerCase()).includes(currentUser.email.toLowerCase());
+            
+            if (!isInAdminList) {
+                const statusDiv = document.getElementById('status');
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `❌ UNAUTHORIZED!<br>Your email (${currentUser.email}) is not authorized to initialize admin access.<br><br>Only emails listed in ADMIN_EMAILS array can do this.`;
+                log(`✗ UNAUTHORIZED: ${currentUser.email} attempted to initialize admin`, true);
+                alert('Access Denied! You are not authorized to initialize admin access.');
+                return;
+            }
+
+            const initBtn = document.getElementById('init-btn');
+            const statusDiv = document.getElementById('status');
+
+            initBtn.disabled = true;
+            initBtn.textContent = '⏳ Initializing...';
+            statusDiv.className = 'status info';
+            statusDiv.textContent = '🔄 Initializing admin users...';
+
+            log('Starting admin initialization...');
+            log(`Authorized by: ${currentUser.email}`);
+
+            let successCount = 0;
+            let errorCount = 0;
+
+            for (const email of ADMIN_EMAILS) {
+                try {
+                    await db.collection('admins').doc(email.toLowerCase()).set({
+                        email: email.toLowerCase(),
+                        addedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        addedBy: currentUser.email || 'system'
+                    });
+                    log(`✓ Admin initialized: ${email}`);
+                    successCount++;
+                } catch (error) {
+                    log(`✗ Failed to initialize ${email}: ${error.message}`, true);
+                    errorCount++;
+                }
+            }
+
+            // Final status
+            if (errorCount === 0) {
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = `✅ Success! Initialized ${successCount} admin(s).<br>You can now access the admin panel!`;
+                log(`🎉 Admin initialization complete! ${successCount} admins added.`);
+            } else {
+                statusDiv.className = 'status warning';
+                statusDiv.innerHTML = `⚠️ Partially complete: ${successCount} succeeded, ${errorCount} failed.<br>Check the log below.`;
+                log(`⚠️ Completed with ${errorCount} error(s).`);
+            }
+
+            initBtn.disabled = false;
+            initBtn.textContent = '🔄 Re-initialize Admin';
+        }
+
+        // Check admin status
+        async function checkAdminStatus() {
+            if (!currentUser) {
+                alert('Please login first!');
+                return;
+            }
+
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = 'status info';
+            statusDiv.textContent = '🔍 Checking admin status...';
+
+            log('Checking admin status...');
+
+            try {
+                const doc = await db.collection('admins').doc(currentUser.email.toLowerCase()).get();
+
+                if (doc.exists) {
+                    statusDiv.className = 'status success';
+                    statusDiv.textContent = `✅ You ARE an admin! You can access the admin panel.`;
+                    log(`✓ ${currentUser.email} is an admin`);
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.textContent = `❌ You are NOT an admin. Your email: ${currentUser.email}`;
+                    log(`✗ ${currentUser.email} is NOT in admin list`, true);
+                }
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = `❌ Error checking status: ${error.message}`;
+                log(`✗ Error: ${error.message}`, true);
+            }
+        }
+    </script>
+</body>
+</html>

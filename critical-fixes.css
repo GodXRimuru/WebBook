@@ -1,0 +1,565 @@
+/* ==============================================
+   CRITICAL FIXES - Footer, Profile Card, Auth Modal
+   ============================================== */
+
+/* ==========================================
+   FIX 1: FOOTER - Horizontal at bottom, transparent
+   ========================================== */
+
+.site-footer {
+    position: relative; /* Changed from fixed */
+    bottom: auto;
+    left: auto;
+    right: auto;
+    background: transparent; /* Made transparent */
+    border-top: 1px solid rgba(218, 165, 32, 0.2);
+    padding: var(--spacing-lg) var(--spacing-md);
+    text-align: center;
+    z-index: 100;
+    margin-top: 60px; /* Space from content */
+}
+
+/* Remove body padding since footer is not fixed */
+body {
+    padding-bottom: 0 !important;
+}
+
+/* ==========================================
+   FIX 2: PROFILE CARD - Smaller on mobile
+   ========================================== */
+
+.footer-profile-card {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.profile-card {
+    position: relative;
+    width: 290px;
+    height: 95px;
+    display: flex;
+    align-items: center;
+}
+
+.profile-content {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4rem 0.5rem 0.5rem 4rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+    padding-right: 0.5rem;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+
+.profile-img {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    object-fit: cover;
+}
+
+.profile-data {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.profile-title {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.profile-button {
+    width: 40px;
+    height: 40px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.3);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.3s;
+    border: none;
+}
+
+.profile-button:hover {
+    transform: scale(1.1);
+}
+
+.profile-menu-icon,
+.profile-close-icon {
+    color: white;
+    position: absolute;
+    transition: opacity 0.3s, transform 0.4s;
+}
+
+.profile-close-icon {
+    opacity: 0;
+}
+
+.profile-social {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+    transform: translateX(120%);
+    transition: transform 0.6s;
+}
+
+.profile-social.show-social {
+    transform: translateX(0);
+}
+
+.profile-link {
+    background-color: rgba(255, 255, 255, 0.1);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    transition: all 0.3s;
+}
+
+.profile-link span {
+    color: white;
+    transition: transform 0.3s;
+}
+
+.profile-link span:hover {
+    transform: scale(1.2);
+}
+
+.show-icon .profile-menu-icon {
+    opacity: 0;
+}
+
+.show-icon .profile-close-icon {
+    opacity: 1;
+}
+
+/* Mobile responsive for profile card */
+@media screen and (max-width: 768px) {
+    .profile-card {
+        width: 240px; /* Smaller on mobile */
+        height: 80px;
+    }
+    
+    .profile-img {
+        width: 80px; /* Smaller image */
+        height: 80px;
+    }
+    
+    .profile-name {
+        font-size: 0.9rem;
+    }
+    
+    .profile-title {
+        font-size: 0.75rem;
+    }
+    
+    .profile-button {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .profile-link {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .profile-card {
+        width: 220px; /* Even smaller */
+        height: 70px;
+    }
+    
+    .profile-img {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .profile-name {
+        font-size: 0.85rem;
+    }
+    
+    .profile-title {
+        font-size: 0.7rem;
+    }
+}
+
+/* ==========================================
+   FIX 3: AUTH MODAL - New sliding design
+   ========================================== */
+
+/* Auth Modal Container */
+.auth-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+}
+
+.auth-modal.active {
+    display: flex;
+}
+
+/* Main Container with sliding animation */
+.auth-container {
+    position: relative;
+    width: 850px;
+    max-width: 100%;
+    height: 550px;
+    background: #1a1a1a;
+    border-radius: 30px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.auth-container h1 {
+    font-size: 36px;
+    margin: -10px 0;
+    color: #fff;
+}
+
+.auth-container p {
+    font-size: 14.5px;
+    margin: 15px 0;
+    color: #ccc;
+}
+
+/* Close button */
+.auth-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.auth-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+/* Form boxes */
+.form-box {
+    position: absolute;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+    padding: 40px;
+    z-index: 1;
+    transition: 0.6s ease-in-out 1.2s, visibility 0s 1s;
+}
+
+.auth-container.active .form-box {
+    right: 50%;
+}
+
+.form-box.register {
+    visibility: hidden;
+}
+
+.auth-container.active .form-box.register {
+    visibility: visible;
+}
+
+.form-box form {
+    width: 100%;
+}
+
+/* Input styling */
+.input-box {
+    position: relative;
+    margin: 30px 0;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 13px 50px 13px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(218, 165, 32, 0.3);
+    outline: none;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.input-box input:focus {
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.input-box input::placeholder {
+    color: #888;
+    font-weight: 400;
+}
+
+.input-box i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #888;
+}
+
+.forgot-link {
+    margin: -15px 0 15px;
+    text-align: right;
+}
+
+.forgot-link a {
+    font-size: 14.5px;
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.forgot-link a:hover {
+    color: var(--accent);
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
+    height: 48px;
+    background: linear-gradient(45deg, var(--accent), #daa520);
+    border-radius: 30px;
+    box-shadow: 0 0 10px rgba(218, 165, 32, 0.3);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(218, 165, 32, 0.5);
+}
+
+/* Social icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+.social-icons a:hover {
+    border-color: var(--accent);
+    background: rgba(218, 165, 32, 0.1);
+}
+
+/* Toggle box with sliding panel */
+.toggle-box {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.toggle-box::before {
+    content: '';
+    position: absolute;
+    left: -250%;
+    width: 300%;
+    height: 100%;
+    background: linear-gradient(45deg, var(--accent), #daa520);
+    border-radius: 150px;
+    z-index: 2;
+    transition: 1.8s ease-in-out;
+}
+
+.auth-container.active .toggle-box::before {
+    left: 50%;
+}
+
+.toggle-panel {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    transition: 0.6s ease-in-out;
+    pointer-events: all;
+}
+
+.toggle-panel.toggle-left {
+    left: 0;
+    transition-delay: 1.2s;
+}
+
+.auth-container.active .toggle-panel.toggle-left {
+    left: -50%;
+    transition-delay: 0.6s;
+}
+
+.toggle-panel.toggle-right {
+    right: -50%;
+    transition-delay: 0.6s;
+}
+
+.auth-container.active .toggle-panel.toggle-right {
+    right: 0;
+    transition-delay: 1.2s;
+}
+
+.toggle-panel p {
+    margin-bottom: 20px;
+}
+
+.toggle-panel .btn {
+    width: 160px;
+    height: 46px;
+    background: transparent;
+    border: 2px solid #fff;
+    box-shadow: none;
+}
+
+.toggle-panel .btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile responsive for auth modal */
+@media screen and (max-width: 650px) {
+    .auth-container {
+        height: calc(100vh - 40px);
+        max-height: 600px;
+    }
+    
+    .form-box {
+        bottom: 0;
+        height: 70%;
+        width: 100%;
+        right: 0;
+    }
+    
+    .auth-container.active .form-box {
+        right: 0;
+        bottom: 30%;
+    }
+    
+    .toggle-box::before {
+        left: 0;
+        top: -270%;
+        height: 300%;
+        width: 100%;
+        border-radius: 20vw;
+    }
+    
+    .auth-container.active .toggle-box::before {
+        left: 0;
+        top: 70%;
+    }
+    
+    .toggle-panel {
+        width: 100%;
+        height: 30%;
+    }
+    
+    .toggle-panel.toggle-left {
+        top: 0;
+        left: 0;
+    }
+    
+    .auth-container.active .toggle-panel.toggle-left {
+        left: 0;
+        top: -30%;
+    }
+    
+    .toggle-panel.toggle-right {
+        right: 0;
+        bottom: -30%;
+    }
+    
+    .auth-container.active .toggle-panel.toggle-right {
+        bottom: 0;
+        right: 0;
+    }
+    
+    .auth-close {
+        top: 10px;
+        right: 10px;
+        width: 35px;
+        height: 35px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .form-box {
+        padding: 20px;
+    }
+    
+    .toggle-panel h1 {
+        font-size: 30px;
+    }
+    
+    .auth-container h1 {
+        font-size: 30px;
+    }
+    
+    .input-box {
+        margin: 20px 0;
+    }
+}
